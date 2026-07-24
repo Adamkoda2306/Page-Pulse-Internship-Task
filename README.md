@@ -110,6 +110,7 @@ Every variable has a working default, so an empty `.env` still boots. These are 
 │   ├── styles.css
 │   └── script.js
 ├── LICENSE
+├── Page Pulse API - Postman.json        # Postman API Collection
 └── README.md
 ```
 

@@ -7,7 +7,7 @@ function positiveInt(value: string | undefined, fallback: number): number {
 
 export const env = {
   port: positiveInt(process.env.PORT, 3000),
-  fetchTimeoutMs: positiveInt(process.env.FETCH_TIMEOUT_MS, 8000),
+  fetchTimeoutMs: (process.env.NODE_ENV === 'test') ? 2000 : positiveInt(process.env.FETCH_TIMEOUT_MS, 8000),
   maxBytes: positiveInt(process.env.MAX_BYTES, 2_000_000),
   rateLimitWindowMs: positiveInt(process.env.RATE_LIMIT_WINDOW_MS, 60_000),
   rateLimitMax: positiveInt(process.env.RATE_LIMIT_MAX, 20),

@@ -1,0 +1,122 @@
+name: Page Pulse CI/CD
+
+# Runs only when something inside backend/ or frontend/ changes (push or PR to main).
+# Deploy runs ONLY on push to main, and ONLY if all three test jobs pass.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "backend/**"
+      - "frontend/**"
+  pull_request:
+    branches: [main]
+    paths:
+      - "backend/**"
+      - "frontend/**"
+
+# Cancel an in-progress run if a newer commit arrives on the same branch
+concurrency:
+  group: ci-cd-${{ github.ref }}
+  cancel-in-progress: true
+
+# ── Global environment variables ──
+env:
+  NODE_ENV: test
+  PORT: 3000
+  RATE_LIMIT_WINDOW_MS: 60000
+  RATE_LIMIT_MAX: 20
+  FETCH_TIMEOUT_MS: 3000
+  MAX_BYTES: 2000
+  ALLOW_PRIVATE_HOSTS: false
+  USER_AGENT: PagePulseBot/1.0 (+https://github.com/Adamkoda2306/Page-Pulse-Internship-Task)
+
+defaults:
+  run:
+    working-directory: backend
+
+jobs:
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run unit tests
+        run: npm run test:unit
+
+  integration-tests:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run integration tests
+        run: npm run test:integration
+
+  coverage:
+    name: Coverage Report
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests with coverage
+        run: npm run test:coverage
+
+      - name: Upload coverage report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: backend/coverage
+          retention-days: 14
+
+  deploy:
+    name: Deploy to Render
+    runs-on: ubuntu-latest
+    # Deploy only if ALL three jobs succeeded, and only on a real push to main
+    # (never on pull requests)
+    needs: [unit-tests, integration-tests, coverage]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - name: Trigger Render deploy hook
+        working-directory: . 
+        run: |
+          response=$(curl -s -o /dev/null -w "%{http_code}" -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}")
+          if [ "$response" -ge 200 ] && [ "$response" -lt 300 ]; then
+            echo "✅ Render deploy triggered successfully (HTTP $response)"
+          else
+            echo "❌ Render deploy hook failed (HTTP $response)"
+            exit 1
+          fi

@@ -1,9 +1,6 @@
 import { AppError } from './appError.utils';
 
-/**
- * Turns user input into a URL we are willing to fetch.
- * Bare domains like "example.com" are assumed to be https.
- */
+/* Turns user input into a URL we are willing to fetch. Bare domains like "example.com" are assumed to be https. */
 export function normalizeUrl(raw: string): URL {
   const trimmed = raw.trim();
   if (!trimmed) {

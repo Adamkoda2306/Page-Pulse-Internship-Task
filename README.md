@@ -11,7 +11,7 @@ HTTP status · response time · title · meta description · H1 count · images 
 [![Jest](https://img.shields.io/badge/Jest-72%20tests%20passing-C21325?logo=jest&logoColor=white)](https://jestjs.io/)
 [![Coverage](https://img.shields.io/badge/coverage-95%25%20statements-brightgreen)](#testing)
 
-**[Live demo](https://your-app.onrender.com)** · **[Repo](https://github.com/Adamkoda2306/Page-Pulse-Internship-Task)**
+**[Live demo](https://page-pulse-internship-task.onrender.com/)** · **[Repo](https://github.com/Adamkoda2306/Page-Pulse-Internship-Task)**
 
 </div>
 
@@ -234,7 +234,7 @@ This cost about thirty lines. It's the part of the codebase I'd defend hardest.
 
 ### 3. No database.
 
-The brief allowed MongoDB. I didn't use it, and I want to be explicit that this was a decision rather than an omission.
+I didn't use it.
 
 Every field in the report is derived from a live fetch. Storing results would mean either serving stale data or building cache invalidation — for a tool whose entire value is that the numbers are current. Mongo would have added a connection to manage, credentials to configure, a new failure mode on boot, and a slower deploy, in exchange for nothing this feature needs.
 
@@ -271,6 +271,81 @@ Writing these found a real bug. `express.json({ limit: '10kb' })` throws a body-
 
 ---
 
+## CI/CD Pipeline
+
+This project uses **GitHub Actions** to automate continuous integration and deployment, ensuring that every code change is validated before being released. The workflow is triggered whenever changes are pushed or a pull request is created for the `main` branch, provided the modifications affect either the `backend` or `frontend` directories.
+
+The pipeline performs the following automated steps:
+
+1. **Install Dependencies**
+   - Checks out the repository.
+   - Sets up the Node.js environment.
+   - Installs project dependencies using `npm ci`.
+
+2. **Run Unit Tests**
+   - Executes all Jest unit tests to verify the correctness of individual modules and utility functions.
+
+3. **Run Integration Tests**
+   - Runs integration tests to validate the complete request–response flow of the API and ensure that different components work together correctly.
+
+4. **Generate Code Coverage**
+   - Generates a coverage report using Jest.
+   - Uploads the coverage report as a GitHub Actions artifact for future reference.
+
+5. **Automated Deployment**
+   - If all previous jobs complete successfully and the commit is pushed to the `main` branch, the workflow automatically triggers a deployment on **Render** using a secure Deploy Hook stored as a GitHub Secret.
+   - This ensures that only tested and validated code is deployed to production.
+
+### Pipeline Workflow
+
+```text
+Developer Push / Pull Request
+            │
+            ▼
+      GitHub Actions Trigger
+            │
+            ▼
+   Install Dependencies (npm ci)
+            │
+            ▼
+      Run Unit Tests (Jest)
+            │
+            ▼
+   Run Integration Tests (Jest)
+            │
+            ▼
+     Generate Coverage Report
+            │
+            ▼
+     Upload Coverage Artifact
+            │
+            ▼
+      All Jobs Successful?
+            │
+            ▼
+      ┌───────────────────────┐
+      │ Yes                   │ No
+      ▼                       ▼
+ Trigger Render Deploy        Don't Trigger Render Deploy                   
+      │
+      ▼               
+ Production Deployment
+```
+
+### Key Features
+
+- Automated CI/CD using **GitHub Actions**.
+- Executes workflows only when changes are made to the `backend` or `frontend` directories.
+- Runs automated unit and integration tests.
+- Generates and uploads code coverage reports.
+- Uses dependency caching (`npm`) to improve workflow performance.
+- Cancels outdated workflow runs using concurrency control.
+- Automatically deploys to **Render** after all quality checks pass.
+- Stores deployment credentials securely using **GitHub Secrets**.
+- Ensures that only tested and validated code reaches production.
+
+---
+
 ## Known limits
 
 Things this tool does not do, listed here so nobody has to discover them the hard way:
@@ -287,9 +362,9 @@ Things this tool does not do, listed here so nobody has to discover them the har
 
 Being straight about this, since it was asked for.
 
-I used AI in three places. First, to break down the brief itself — I pasted the task in and worked through what was actually being asked, which requirements were load-bearing, and where the edge cases were likely to hide. Second, to generate a skeleton of the project so I had a structure to push against rather than a blank editor; I then reworked it into the shape you see here, renamed and reorganised the modules, and rewrote the parts I disagreed with. Third, for the test code, where I described the cases I wanted covered and iterated on the implementations.
+I used AI in three places. First, to break down the brief itself — I pasted the task in and worked through what was actually being asked, which requirements were load-bearing, and where the edge cases were likely to hide. Second, to generate a skeleton of the project so I had a structure to push against rather than a blank editor; I then reworked it into the shape you see here, renamed and reorganised the modules, and rewrote the parts I disagreed with. Third, for the test code, where I started by describing the main cases I wanted to cover and then asked for additional suggestions on missing scenarios, edge cases, and improvements to ensure the test suite was as comprehensive as possible before refining the implementations.
 
-What I did not delegate: the decisions. The choice to audit non-2xx pages but reject non-HTML ones, the manual redirect handling and the SSRF checks behind it, the error taxonomy and response envelope, and the call to skip MongoDB entirely are mine, and the reasoning in this README is my reasoning. I read every line I kept, and where I couldn't defend something, it isn't in the repo.
+What I did not delegate: the decisions. The choice to audit non-2xx pages but reject non-HTML ones, the manual redirect handling and the SSRF checks behind it, the error taxonomy and response envelope, and the call to skip database entirely are mine, and the reasoning in this README is my reasoning. I read every line I kept, and where I couldn't defend something, it isn't in the repo.
 
 ---
 

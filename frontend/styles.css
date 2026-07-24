@@ -1,0 +1,166 @@
+:root {
+  --bg: #0f1115;
+  --panel: #171a21;
+  --line: #262b35;
+  --text: #e8eaed;
+  --muted: #9aa3b2;
+  --accent: #4c8dff;
+  --warn: #e0a400;
+  --bad: #e5534b;
+  --good: #3fb950;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.5 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+.wrap {
+  flex: 1;
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 56px 20px 40px;
+}
+
+.head h1 {
+  margin: 0 0 6px;
+  font-size: 30px;
+  letter-spacing: -0.02em;
+}
+
+.head p {
+  margin: 0 0 28px;
+  color: var(--muted);
+}
+
+.form {
+  display: flex;
+  gap: 10px;
+}
+
+.form input {
+  flex: 1;
+  min-width: 0;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  color: var(--text);
+  font-size: 15px;
+}
+
+.form input:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: -1px;
+}
+
+.form button {
+  padding: 12px 20px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.form button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.status {
+  min-height: 22px;
+  margin: 16px 0 0;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.status.error {
+  color: var(--bad);
+}
+
+.result {
+  margin-top: 24px;
+}
+
+.meta {
+  margin: 0 0 16px;
+  font-size: 13px;
+  color: var(--muted);
+  word-break: break-all;
+}
+
+.meta a {
+  color: var(--accent);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.card {
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--panel);
+}
+
+.card .label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.card .value {
+  margin-top: 6px;
+  font-size: 20px;
+  font-weight: 600;
+  word-break: break-word;
+}
+
+.card .value.small {
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.45;
+}
+
+.card.wide {
+  grid-column: 1 / -1;
+}
+
+.ok {
+  color: var(--good);
+}
+.warn {
+  color: var(--warn);
+}
+.bad {
+  color: var(--bad);
+}
+
+.credit {
+  padding: 20px;
+  border-top: 1px solid var(--line);
+  text-align: center;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.credit a {
+  color: var(--muted);
+}

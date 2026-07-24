@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Page Pulse — quick URL audit</title>
+    <meta name="description" content="Paste a URL and get a fast report on its HTML." />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="wrap">
+      <header class="head">
+        <h1>Page Pulse</h1>
+        <p>Paste a URL. Get the basics of its HTML in one shot.</p>
+      </header>
+
+      <form id="audit-form" class="form" novalidate>
+        <input
+          id="url"
+          name="url"
+          type="text"
+          placeholder="example.com"
+          autocomplete="url"
+          spellcheck="false"
+          required
+        />
+        <button type="submit">Audit</button>
+      </form>
+
+      <p id="status" class="status" role="status" aria-live="polite"></p>
+      <section id="result" class="result" hidden></section>
+    </main>
+
+    <footer class="credit">
+      <a href="https://digitalheroesco.com" target="_blank" rel="noopener"
+        >Built for Digital Heroes Training Task</a
+      >
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
